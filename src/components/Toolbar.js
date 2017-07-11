@@ -12,6 +12,12 @@ import {getSelectionCoords, getSelectedBlockElement} from "../utils";
 
 
 export default class Toolbar extends Component {
+  static defaultProps = {
+    shouldDisplayToolbarFn() {
+      return !this.editorState.getSelection().isCollapsed();
+    },
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -49,6 +55,11 @@ export default class Toolbar extends Component {
     let key = item.label;
 
     switch(item.type) {
+      case "custom": {
+        key = "custom-" + position;
+        toggle = () => item.action(this.props.editorState);
+        break;
+      }
       case "inline": {
         current = this.props.editorState.getCurrentInlineStyle();
         toggle = () => this.toggleInlineStyle(item.style);
@@ -94,6 +105,7 @@ export default class Toolbar extends Component {
   setBarPosition() {
     const editor = this.props.editor;
     const toolbar = this.refs.toolbar;
+    const arrow = this.refs.arrow;
     const selectionCoords = getSelectionCoords(editor, toolbar);
 
     if (!selectionCoords) {
@@ -121,6 +133,19 @@ export default class Toolbar extends Component {
         position: {
           bottom: selectionCoords.offsetBottom,
           left: selectionCoords.offsetLeft
+        }
+      }, state => {
+        const minOffsetLeft = 5;
+        const minOffsetRight = 5;
+        const toolbarDimensions = toolbar.getBoundingClientRect();
+
+        if (toolbarDimensions.left < minOffsetLeft) {
+          toolbar.style.left = -((toolbarDimensions.width / 2) + toolbarDimensions.left - minOffsetLeft) + "px";
+          arrow.style.left = ((toolbarDimensions.width / 2) + toolbarDimensions.left - minOffsetLeft) + "px";
+        }
+        if (toolbarDimensions.left + toolbarDimensions.width > window.innerWidth - minOffsetRight) {
+          toolbar.style.left = -(toolbarDimensions.right - selectionCoords.offsetLeft + minOffsetRight) + "px";
+          arrow.style.left = (toolbarDimensions.right - selectionCoords.offsetLeft + minOffsetRight) + "px";
         }
       });
     }
@@ -254,6 +279,7 @@ export default class Toolbar extends Component {
     if(this.props.readOnly) {
       return null;
     }
+
     const toolbarClass = classNames("toolbar", {
       "toolbar--open": this.state.show,
       "toolbar--error": this.state.error
@@ -271,7 +297,7 @@ export default class Toolbar extends Component {
               this.renderToolList()
             }
             <p className="toolbar__error-msg">{this.state.error}</p>
-            <span className="toolbar__arrow" />
+            <span className="toolbar__arrow" ref="arrow"/>
           </div>
         </div>
       </div>

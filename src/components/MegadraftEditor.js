@@ -17,7 +17,8 @@ import {
     getDefaultKeyBinding,
     EditorState,
     genKey,
-    ContentBlock
+    ContentBlock,
+    SelectionState
 } from "draft-js";
 import Immutable from "immutable";
 
@@ -34,6 +35,10 @@ const NO_RESET_STYLE_DEFAULT = ["ordered-list-item", "unordered-list-item"];
 
 
 export default class MegadraftEditor extends Component {
+  static defaultProps = {
+    actions: DEFAULT_ACTIONS,
+  }
+
   constructor(props) {
     super(props);
     this.state = {
@@ -54,7 +59,6 @@ export default class MegadraftEditor extends Component {
 
     this.externalKeyBindings = ::this.externalKeyBindings;
 
-    this.actions = this.props.actions || DEFAULT_ACTIONS;
     this.plugins = this.getValidPlugins();
     this.entityInputs = this.props.entityInputs || DEFAULT_ENTITY_INPUTS;
     this.blocksWithoutStyleReset = (this.props.blocksWithoutStyleReset ||
@@ -175,10 +179,11 @@ export default class MegadraftEditor extends Component {
         isBackward: false
       })
     });
-
     const noStyle = Immutable.OrderedSet([]);
     const resetState = EditorState.push(editorState, newContentState, "split-block");
-    const noStyleState = EditorState.setInlineStyleOverride(resetState, noStyle);
+    const emptySelection = SelectionState.createEmpty(emptyBlockKey);
+    const editorSelected = EditorState.forceSelection(resetState, emptySelection);
+    const noStyleState = EditorState.setInlineStyleOverride(editorSelected, noStyle);
     this.props.onChange(noStyleState);
   }
 
@@ -325,7 +330,7 @@ export default class MegadraftEditor extends Component {
             readOnly={this.state.readOnly}
             plugins={this.plugins}
             blockRendererFn={this.mediaBlockRenderer}
-            blockStyleFn={this.blockStyleFn}
+            blockStyleFn={this.props.blockStyleFn || this.blockStyleFn}
             onTab={this.onTab}
             handleKeyCommand={this.handleKeyCommand}
             handleReturn={this.props.handleReturn || this.handleReturn}
@@ -337,8 +342,9 @@ export default class MegadraftEditor extends Component {
             editorState: this.props.editorState,
             readOnly: this.state.readOnly,
             onChange: this.onChange,
-            actions: this.actions,
-            entityInputs: this.entityInputs
+            actions: this.props.actions,
+            entityInputs: this.entityInputs,
+            shouldDisplayToolbarFn: this.props.shouldDisplayToolbarFn,
           })}
         </div>
       </div>
