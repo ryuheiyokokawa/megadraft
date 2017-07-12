@@ -41,6 +41,7 @@ export default class MegadraftEditor extends Component {
 
   constructor(props) {
     super(props);
+    console.log(props)
     this.state = {
       readOnly: this.props.readOnly || false
     };
@@ -112,7 +113,12 @@ export default class MegadraftEditor extends Component {
   }
 
   onTab(event) {
-    event.preventDefault();
+     let editorState = this.props.editorState;
+      //this.props.value.getEditorState()
+     let newEditorState = RichUtils.onTab(event, editorState, 4);
+     if (newEditorState !== editorState) {
+       this.onChange(newEditorState);
+     }
   }
 
   handleKeyCommand(command) {
@@ -331,7 +337,7 @@ export default class MegadraftEditor extends Component {
             plugins={this.plugins}
             blockRendererFn={this.mediaBlockRenderer}
             blockStyleFn={this.props.blockStyleFn || this.blockStyleFn}
-            onTab={this.onTab}
+            onTab={this.onTab.bind(this)}
             handleKeyCommand={this.handleKeyCommand}
             handleReturn={this.props.handleReturn || this.handleReturn}
             keyBindingFn={this.externalKeyBindings}

@@ -151,6 +151,14 @@
  *
  * License: MIT
  */
+  /* @noflip */
+  /* @noflip */
+  /* @noflip */
+  /* @noflip */
+  /* @noflip */
+  /* @noflip */
+  /* @noflip */
+  /* @noflip */
 }
 
 .megadraft-editor .DraftEditor-root, .megadraft-editor .toolbar {
@@ -719,4 +727,36 @@
   font-size: 12px;
   line-height: 16px;
   font-weight: bold;
+}
+
+.megadraft-editor .public-DraftStyleDefault-depth0.public-DraftStyleDefault-listLTR {
+  margin-left: 1em;
+}
+
+.megadraft-editor .public-DraftStyleDefault-depth0.public-DraftStyleDefault-listRTL {
+  margin-right: 1em;
+}
+
+.megadraft-editor .public-DraftStyleDefault-depth1.public-DraftStyleDefault-listLTR {
+  margin-left: 2em;
+}
+
+.megadraft-editor .public-DraftStyleDefault-depth1.public-DraftStyleDefault-listRTL {
+  margin-right: 2em;
+}
+
+.megadraft-editor .public-DraftStyleDefault-depth2.public-DraftStyleDefault-listLTR {
+  margin-left: 3em;
+}
+
+.megadraft-editor .public-DraftStyleDefault-depth2.public-DraftStyleDefault-listRTL {
+  margin-right: 3em;
+}
+
+.megadraft-editor .public-DraftStyleDefault-depth3.public-DraftStyleDefault-listLTR {
+  margin-left: 4em;
+}
+
+.megadraft-editor .public-DraftStyleDefault-depth3.public-DraftStyleDefault-listRTL {
+  margin-right: 4em;
 }
