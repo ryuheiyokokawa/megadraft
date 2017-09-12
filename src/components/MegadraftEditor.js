@@ -337,6 +337,7 @@ export default class MegadraftEditor extends Component {
             plugins={this.plugins}
             blockRendererFn={this.mediaBlockRenderer}
             blockStyleFn={this.props.blockStyleFn || this.blockStyleFn}
+            spellCheck={true}
             onTab={this.onTab.bind(this)}
             handleKeyCommand={this.handleKeyCommand}
             handleReturn={this.props.handleReturn || this.handleReturn}
