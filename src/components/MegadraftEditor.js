@@ -40,8 +40,7 @@ export default class MegadraftEditor extends Component {
   }
 
   constructor(props) {
-    super(props);
-    console.log(props)
+    super(props);    
     this.state = {
       readOnly: this.props.readOnly || false
     };
